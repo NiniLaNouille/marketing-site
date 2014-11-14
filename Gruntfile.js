@@ -60,6 +60,8 @@ module.exports = function(grunt) {
         src: [
           '**',
 
+          '!*.html', // htmlmin
+
           // These are packaged by RequireJS.
           '!js/almond*.js',
           '!js/app/**',
@@ -100,6 +102,25 @@ module.exports = function(grunt) {
         options: {
           reload: true
         }
+      }
+    },
+    htmlmin: {
+      dist: {
+        options:
+        { removeComments: true
+        , collapseWhitespace: true
+        , conservativeCollapse: true
+        , preserveLineBreaks: true
+        , collapseBooleanAttributes: true
+        , removeRedundantAttributes: true
+        , removeEmptyAttributes: true
+        },
+        files: [{
+          expand: true,
+          cwd: '.build-tmp/',
+          src: '*.html',
+          dest: 'dist/'
+        }]
       }
     },
     revision: { /* Default options are just fine */ },
@@ -279,6 +300,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-git-revision');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
   /**
     Task to build a distribution package. Outputs to `dist` directory.
@@ -297,6 +319,7 @@ module.exports = function(grunt) {
     'requirejs:compile',
     'replace:requirejs',
     'compass:dist',
+    'htmlmin',
     'filerev',
     'usemin',
     'copy:dist'
@@ -311,6 +334,7 @@ module.exports = function(grunt) {
     'requirejs:compile',
     'replace:requirejs',
     'compass:dist',
+    'htmlmin',
     'filerev',
     'usemin',
     'copy:dist'
