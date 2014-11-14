@@ -27,63 +27,63 @@ define([
     };
   };
 
-  var init = function() {
+  var init = function(root) {
     el = {
-      trial: $('#trial'),
-      animationContainer: $('#trial-animation-container'),
+      root: root,
+      animationContainer: root.find('#trial-animation-container'),
 
-      emailSlide: $('#trial-email-slide'),
-      emailInput: $('#trial-email-input'),
-      emailForm: $('#trial-email-form'),
-      emailNotSell: $('#trial-email-not-sell'),
-      emailInvalid: $('#trial-email-invalid'),
+      emailSlide: root.find('#trial-email-slide'),
+      emailInput: root.find('#trial-email-input'),
+      emailForm: root.find('#trial-email-form'),
+      emailNotSell: root.find('#trial-email-not-sell'),
+      emailInvalid: root.find('#trial-email-invalid'),
 
-      emailCheckFailedSlide: $('#trial-email-check-failed'),
+      emailCheckFailedSlide: root.find('#trial-email-check-failed'),
 
-      existingAccountSlide: $('#trial-existing-account'),
+      existingAccountSlide: root.find('#trial-existing-account'),
 
-      localizationSlide: $('#trial-localization'),
-      localizationCountrySelect: $('#trial-localization-country-select'),
-      localizationCountryDefault: $('#trial-localization-country-default'),
-      localizationLanguageSelect: $('#trial-localization-language-select'),
-      localizationLanguageDefault: $('#trial-localization-language-default'),
-      localizationForm: $('#trial-localization-form'),
-      localizationDidntFindLanguage: $('#trial-localization-didnt-find-language'),
-      localizationCountryInvalid: $('#trial-localization-country-invalid'),
-      localizationLanguageInvalid: $('#trial-localization-language-invalid'),
+      localizationSlide: root.find('#trial-localization'),
+      localizationCountrySelect: root.find('#trial-localization-country-select'),
+      localizationCountryDefault: root.find('#trial-localization-country-default'),
+      localizationLanguageSelect: root.find('#trial-localization-language-select'),
+      localizationLanguageDefault: root.find('#trial-localization-language-default'),
+      localizationForm: root.find('#trial-localization-form'),
+      localizationDidntFindLanguage: root.find('#trial-localization-didnt-find-language'),
+      localizationCountryInvalid: root.find('#trial-localization-country-invalid'),
+      localizationLanguageInvalid: root.find('#trial-localization-language-invalid'),
 
-      nameSlide: $('#trial-name-slide'),
-      nameFirstInput: $('#trial-name-first-input'),
-      nameLastInput: $('#trial-name-last-input'),
-      nameForm: $('#trial-name-form'),
-      nameFirstInvalid: $('#trial-name-first-invalid'),
-      nameLastInvalid: $('#trial-name-last-invalid'),
+      nameSlide: root.find('#trial-name-slide'),
+      nameFirstInput: root.find('#trial-name-first-input'),
+      nameLastInput: root.find('#trial-name-last-input'),
+      nameForm: root.find('#trial-name-form'),
+      nameFirstInvalid: root.find('#trial-name-first-invalid'),
+      nameLastInvalid: root.find('#trial-name-last-invalid'),
 
-      passwordSlide: $('#trial-password-slide'),
-      passwordForm: $('#trial-password-form'),
-      passwordInput: $('#trial-password-input'),
-      passwordConfirmationInput: $('#trial-password-confirmation-input'),
-      passwordMissing: $('#trial-password-missing'),
-      passwordConfirmationMissing: $('#trial-password-confirmation-missing'),
-      passwordTooShort: $('#trial-password-too-short'),
-      passwordConfirmationMismatch: $('#trial-password-confirmation-mismatch'),
+      passwordSlide: root.find('#trial-password-slide'),
+      passwordForm: root.find('#trial-password-form'),
+      passwordInput: root.find('#trial-password-input'),
+      passwordConfirmationInput: root.find('#trial-password-confirmation-input'),
+      passwordMissing: root.find('#trial-password-missing'),
+      passwordConfirmationMissing: root.find('#trial-password-confirmation-missing'),
+      passwordTooShort: root.find('#trial-password-too-short'),
+      passwordConfirmationMismatch: root.find('#trial-password-confirmation-mismatch'),
 
-      marketplaceSlide: $('#trial-marketplace-slide'),
-      marketplaceForm: $('#trial-marketplace-form'),
-      marketplaceTypeSelect: $('#trial-marketplace-type-select'),
-      marketplaceTypeDefault: $('#trial-marketplace-type-default'),
-      marketplaceNameInput: $('#trial-marketplace-name-input'),
-      marketplaceTypeInvalid: $('#trial-marketplace-type-invalid'),
-      marketplaceNameTooShort: $('#trial-marketplace-name-too-short'),
+      marketplaceSlide: root.find('#trial-marketplace-slide'),
+      marketplaceForm: root.find('#trial-marketplace-form'),
+      marketplaceTypeSelect: root.find('#trial-marketplace-type-select'),
+      marketplaceTypeDefault: root.find('#trial-marketplace-type-default'),
+      marketplaceNameInput: root.find('#trial-marketplace-name-input'),
+      marketplaceTypeInvalid: root.find('#trial-marketplace-type-invalid'),
+      marketplaceNameTooShort: root.find('#trial-marketplace-name-too-short'),
 
-      createdSlide: $('#trial-created-slide'),
-      createFailedSlide: $('#trial-create-failed-slide'),
-      createSuccessSlide: $('#trial-create-success-slide'),
+      createdSlide: root.find('#trial-created-slide'),
+      createFailedSlide: root.find('#trial-create-failed-slide'),
+      createSuccessSlide: root.find('#trial-create-success-slide'),
 
-      gotoButton: $('#trial-goto-button')
+      gotoButton: root.find('#trial-goto-button')
     };
 
-    if (!el.trial.length) { return; } // Trial form is not present
+    if (!el.root.length) { return; } // Trial form is not present
 
     initEmail();
     initLocalization();
