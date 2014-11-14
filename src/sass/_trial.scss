@@ -33,6 +33,7 @@ $trial-next-button-wide-width: 120px;
 
 .trial-lightbox {
   @extend ._trial;
+  display: none;
 }
 
 .trial-content {

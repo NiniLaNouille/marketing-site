@@ -13,6 +13,7 @@ define(
     var app = {
       init: function() {
         new FastClick(document.body);
+        $('input, textarea').placeholder();
 
         //initialize sticky nav bar
         $('#main-navigation').fixedsticky();
@@ -34,7 +35,18 @@ define(
 
         this.initializeOdometers();
 
+        // Initialize lightbox
+        var clone = $('#trial').clone();
+
+        clone
+          .attr('id', 'trial-lightbox')
+          .removeClass('trial-inline')
+          .addClass('trial-lightbox')
+          .appendTo($('body'));
+
+        // Initialize index page trial form
         trialForm.init($('#trial'));
+        trialForm.init(clone);
 
         scrollSpy.init($('#side-navigation a'));
 
@@ -42,13 +54,34 @@ define(
           window.console.log('Hi there! Interested in code?\n\nSharetribe is an open-source marketplace platform. See our Github profile https://github.com/sharetribe/ for more information about the open-source project.');
         }
 
-        $(".fancybox")
+        $("#sharetribe-video")
           .fancybox({
             width       : '100%',
             height      : '100%',
             type        : 'iframe',
             scrolling   : 'no',
-            preload     : 'true'
+            preload     : 'true',
+
+            // This prevents jumping when the lightbox is closed
+            helpers: {
+              overlay: {
+                locked: false
+              }
+            }
+          });
+
+        $(".get-started")
+          .fancybox({
+            type: 'inline',
+            autoSize: false,
+            width: 1000,
+
+            // This prevents jumping when the lightbox is closed
+            helpers: {
+              overlay: {
+                locked: false
+              }
+            }
           });
         }
 

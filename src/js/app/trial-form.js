@@ -8,366 +8,372 @@ define([
   , 'chosen'
   , 'placeholder'
 ], function($, _, move, validator, Modernizr) {
-  $('input, textarea').placeholder();
 
-  // cache elements
-  var el = {};
+  var create = function() {
+    // cache elements
+    var el = {};
 
-  // save user input to this object right after validation
-  var data = {};
+    // save user input to this object right after validation
+    var data = {};
 
-  // Helper function to create submit handler
-  var submitHandler = function(clbk) {
-    return function(e) {
-      clbk(e); // Run the handler
+    // Helper function to create submit handler
+    var submitHandler = function(clbk) {
+      return function(e) {
+        clbk(e); // Run the handler
 
-      // Don't submit the form
-      e.preventDefault();
-      return false;
-    };
-  };
-
-  var init = function(root) {
-    el = {
-      root: root,
-      animationContainer: root.find('#trial-animation-container'),
-
-      emailSlide: root.find('#trial-email-slide'),
-      emailInput: root.find('#trial-email-input'),
-      emailForm: root.find('#trial-email-form'),
-      emailNotSell: root.find('#trial-email-not-sell'),
-      emailInvalid: root.find('#trial-email-invalid'),
-
-      emailCheckFailedSlide: root.find('#trial-email-check-failed'),
-
-      existingAccountSlide: root.find('#trial-existing-account'),
-
-      localizationSlide: root.find('#trial-localization'),
-      localizationCountrySelect: root.find('#trial-localization-country-select'),
-      localizationCountryDefault: root.find('#trial-localization-country-default'),
-      localizationLanguageSelect: root.find('#trial-localization-language-select'),
-      localizationLanguageDefault: root.find('#trial-localization-language-default'),
-      localizationForm: root.find('#trial-localization-form'),
-      localizationDidntFindLanguage: root.find('#trial-localization-didnt-find-language'),
-      localizationCountryInvalid: root.find('#trial-localization-country-invalid'),
-      localizationLanguageInvalid: root.find('#trial-localization-language-invalid'),
-
-      nameSlide: root.find('#trial-name-slide'),
-      nameFirstInput: root.find('#trial-name-first-input'),
-      nameLastInput: root.find('#trial-name-last-input'),
-      nameForm: root.find('#trial-name-form'),
-      nameFirstInvalid: root.find('#trial-name-first-invalid'),
-      nameLastInvalid: root.find('#trial-name-last-invalid'),
-
-      passwordSlide: root.find('#trial-password-slide'),
-      passwordForm: root.find('#trial-password-form'),
-      passwordInput: root.find('#trial-password-input'),
-      passwordConfirmationInput: root.find('#trial-password-confirmation-input'),
-      passwordMissing: root.find('#trial-password-missing'),
-      passwordConfirmationMissing: root.find('#trial-password-confirmation-missing'),
-      passwordTooShort: root.find('#trial-password-too-short'),
-      passwordConfirmationMismatch: root.find('#trial-password-confirmation-mismatch'),
-
-      marketplaceSlide: root.find('#trial-marketplace-slide'),
-      marketplaceForm: root.find('#trial-marketplace-form'),
-      marketplaceTypeSelect: root.find('#trial-marketplace-type-select'),
-      marketplaceTypeDefault: root.find('#trial-marketplace-type-default'),
-      marketplaceNameInput: root.find('#trial-marketplace-name-input'),
-      marketplaceTypeInvalid: root.find('#trial-marketplace-type-invalid'),
-      marketplaceNameTooShort: root.find('#trial-marketplace-name-too-short'),
-
-      createdSlide: root.find('#trial-created-slide'),
-      createFailedSlide: root.find('#trial-create-failed-slide'),
-      createSuccessSlide: root.find('#trial-create-success-slide'),
-
-      gotoButton: root.find('#trial-goto-button')
+        // Don't submit the form
+        e.preventDefault();
+        return false;
+      };
     };
 
-    if (!el.root.length) { return; } // Trial form is not present
+    var init = function(root) {
+      el = {
+        root: root,
+        animationContainer: root.find('#trial-animation-container'),
 
-    initEmail();
-    initLocalization();
-    initName();
-    initPassword();
-    initMarketplace();
-  };
+        emailSlide: root.find('#trial-email-slide'),
+        emailInput: root.find('#trial-email-input'),
+        emailForm: root.find('#trial-email-form'),
+        emailNotSell: root.find('#trial-email-not-sell'),
+        emailInvalid: root.find('#trial-email-invalid'),
 
-  var initEmail = function() {
-    el.emailForm.submit(emailHandler);
-  };
+        emailCheckFailedSlide: root.find('#trial-email-check-failed'),
 
-  var initLocalization = function() {
-    initChosen(el.localizationForm, el.localizationCountrySelect, el.localizationCountryDefault);
-    initChosen(el.localizationForm, el.localizationLanguageSelect, el.localizationLanguageDefault);
+        existingAccountSlide: root.find('#trial-existing-account'),
 
-    el.localizationForm.submit(localizationHandler);
-  };
+        localizationSlide: root.find('#trial-localization'),
+        localizationCountrySelect: root.find('#trial-localization-country-select'),
+        localizationCountryDefault: root.find('#trial-localization-country-default'),
+        localizationLanguageSelect: root.find('#trial-localization-language-select'),
+        localizationLanguageDefault: root.find('#trial-localization-language-default'),
+        localizationForm: root.find('#trial-localization-form'),
+        localizationDidntFindLanguage: root.find('#trial-localization-didnt-find-language'),
+        localizationCountryInvalid: root.find('#trial-localization-country-invalid'),
+        localizationLanguageInvalid: root.find('#trial-localization-language-invalid'),
 
-  var initName = function() {
-    el.nameForm.submit(nameHandler);
-  };
+        nameSlide: root.find('#trial-name-slide'),
+        nameFirstInput: root.find('#trial-name-first-input'),
+        nameLastInput: root.find('#trial-name-last-input'),
+        nameForm: root.find('#trial-name-form'),
+        nameFirstInvalid: root.find('#trial-name-first-invalid'),
+        nameLastInvalid: root.find('#trial-name-last-invalid'),
 
-  var initPassword = function() {
-    el.passwordForm.submit(passwordHandler);
-  };
+        passwordSlide: root.find('#trial-password-slide'),
+        passwordForm: root.find('#trial-password-form'),
+        passwordInput: root.find('#trial-password-input'),
+        passwordConfirmationInput: root.find('#trial-password-confirmation-input'),
+        passwordMissing: root.find('#trial-password-missing'),
+        passwordConfirmationMissing: root.find('#trial-password-confirmation-missing'),
+        passwordTooShort: root.find('#trial-password-too-short'),
+        passwordConfirmationMismatch: root.find('#trial-password-confirmation-mismatch'),
 
-  var initMarketplace = function() {
-    initChosen(el.marketplaceForm, el.marketplaceTypeSelect, el.marketplaceTypeDefault);
+        marketplaceSlide: root.find('#trial-marketplace-slide'),
+        marketplaceForm: root.find('#trial-marketplace-form'),
+        marketplaceTypeSelect: root.find('#trial-marketplace-type-select'),
+        marketplaceTypeDefault: root.find('#trial-marketplace-type-default'),
+        marketplaceNameInput: root.find('#trial-marketplace-name-input'),
+        marketplaceTypeInvalid: root.find('#trial-marketplace-type-invalid'),
+        marketplaceNameTooShort: root.find('#trial-marketplace-name-too-short'),
 
-    el.marketplaceForm.submit(marketplaceHandler);
-  };
+        createdSlide: root.find('#trial-created-slide'),
+        createFailedSlide: root.find('#trial-create-failed-slide'),
+        createSuccessSlide: root.find('#trial-create-success-slide'),
 
-  var initChosen = function(form, select, defaultOption) {
-    select.chosen({
-      inherit_select_classes: true,
-      width: '100%',
-      disable_search_threshold: 4
-    });
+        gotoButton: root.find('#trial-goto-button')
+      };
 
-    // Chosen is disabled for iOS, Android, etc.
-    // We need to add a default option in order to show a placeholder for those browsers
-    var chosenActivated = form.find('.chosen-container').length > 0;
+      if (!el.root.length) { return; } // Trial form is not present
 
-    if (!chosenActivated) {
-      defaultOption.text(select.data('placeholder'));
-    }
-  };
+      initEmail();
+      initLocalization();
+      initName();
+      initPassword();
+      initMarketplace();
+    };
 
-  var hide = function(slide, clbk) {
-    clbk = clbk || function() {};
-    if (!Modernizr.csstransitions) {
-      slide.hide('slow', clbk);
-    } else {
-      move(slide[0])
-        .translate(-300)
-        .set('opacity', 0.1)
-        .end(function() {
-          slide.css('display', 'none');
-          slide.css('opacity', 1);
+    var initEmail = function() {
+      el.emailForm.submit(emailHandler);
+    };
 
-          _.defer(clbk);
-        });
-    }
-  };
+    var initLocalization = function() {
+      initChosen(el.localizationForm, el.localizationCountrySelect, el.localizationCountryDefault);
+      initChosen(el.localizationForm, el.localizationLanguageSelect, el.localizationLanguageDefault);
 
-  var show = function(slide, clbk) {
-    clbk = clbk || function() {};
-    if (!Modernizr.csstransitions) {
-      slide.show('slow', clbk);
-    } else {
-      var clone = slide.clone();
+      el.localizationForm.submit(localizationHandler);
+    };
 
-      $('#trial-animation-container')
-        .show()
-        .empty()
-        .append(clone);
+    var initName = function() {
+      el.nameForm.submit(nameHandler);
+    };
 
-      move(clone[0])
-        .set('display', 'block')
-        .set('opacity', 0.1)
-        .x(300)
-        .duration(0)
-        .end(function() {
-          move(clone[0])
-            .set('opacity', 1)
-            .x(0)
-            .end(function() {
-              _.defer(function() {
-                slide.show();
-                $('#trial-animation-container').empty().hide();
-                _.defer(clbk);
-              });
-            });
-        });
-    }
-  };
+    var initPassword = function() {
+      el.passwordForm.submit(passwordHandler);
+    };
 
-  var focusFormInSlide = function(elSlide) {
-    elSlide.find('form :input:first') // select first input
-      .focus()                        // and focus it
-      .trigger('chosen:activate');    // trigger event to activate chosen selects
-  };
+    var initMarketplace = function() {
+      initChosen(el.marketplaceForm, el.marketplaceTypeSelect, el.marketplaceTypeDefault);
 
-  var showAndFocus = function(elShow, clbk) {
-    clbk = clbk || function() {};
-    show(elShow, function() {
-      focusFormInSlide(elShow);
-      clbk();
-    });
-  };
+      el.marketplaceForm.submit(marketplaceHandler);
+    };
 
-  var hideAndShow = function(elHide, elShow, clbk) {
-    clbk = clbk || function() {};
-    hide(elHide, function() {
-      showAndFocus(elShow, clbk);
-    });
-  };
-
-  var checkEmailAvailability = function(email, success, fail) {
-    var request = $.ajax(
-      {
-        type: "GET"
-        , url: 'http://catch.sharetri.be/int_api/check_email_availability'
-        , data: {email: email}
-        , dataType: 'json'
+    var initChosen = function(form, select, defaultOption) {
+      select.chosen({
+        inherit_select_classes: true,
+        width: '100%',
+        disable_search_threshold: 4
       });
 
-    request.done(function(response) {
-      success(response.available);
-    });
-    request.fail(fail);
-  };
+      // Chosen is disabled for iOS, Android, etc.
+      // We need to add a default option in order to show a placeholder for those browsers
+      var chosenActivated = form.find('.chosen-container').length > 0;
 
-  var emailHandler = submitHandler(function(e) {
-    // Keep animation and email check state in memory
-    var animationDone = false;
-    var checkDone = false;
-    var emailAvailable;
-    var email = el.emailInput.val();
-
-    // Handle animation OR check ready.
-    // This is a stupid piece of code that should be handled without mutable variables
-    // by some library e.g. Bacon
-    var animationOrCheckDone = function() {
-      if(animationDone && checkDone) {
-        if (emailAvailable) {
-          data.admin_email = email;
-          showAndFocus(el.localizationSlide);
-        } else {
-          show(el.existingAccountSlide);
-        }
+      if (!chosenActivated) {
+        defaultOption.text(select.data('placeholder'));
       }
     };
 
-    if (validator.validEmail(email)){
-      hide(el.emailSlide, function() {
-        animationDone = true;
-        animationOrCheckDone();
-      });
-      checkEmailAvailability(email, function(available) {
-        checkDone = true;
-        emailAvailable = available;
-        animationOrCheckDone();
-      }, function() {
-        show(el.emailCheckFailedSlide);
-      });
-    } else {
-      el.emailNotSell.hide();
-      el.emailInvalid.show();
-    }
-  });
+    var hide = function(slide, clbk) {
+      clbk = clbk || function() {};
+      if (!Modernizr.csstransitions) {
+        slide.hide('slow', clbk);
+      } else {
+        move(slide[0])
+          .translate(-300)
+          .set('opacity', 0.1)
+          .end(function() {
+            slide.css('display', 'none');
+            slide.css('opacity', 1);
 
-  var localizationHandler = submitHandler(function(e) {
-    var country = el.localizationCountrySelect.val();
-    var language = el.localizationLanguageSelect.val();
+            _.defer(clbk);
+          });
+      }
+    };
 
-    if (!validator.validCountry(country)) {
-      el.localizationDidntFindLanguage.hide();
-      el.localizationLanguageInvalid.hide();
-      el.localizationCountryInvalid.show();
-    } else if (!validator.validLanguage(language)) {
-      el.localizationDidntFindLanguage.hide();
-      el.localizationCountryInvalid.hide();
-      el.localizationLanguageInvalid.show();
-    } else {
-      data.marketplace_country = country;
-      data.marketplace_language = language;
-      hideAndShow(el.localizationSlide, el.nameSlide);
-    }
-  });
+    var show = function(slide, clbk) {
+      clbk = clbk || function() {};
+      if (!Modernizr.csstransitions) {
+        slide.show('slow', clbk);
+      } else {
+        var clone = slide.clone();
 
-  var nameHandler = submitHandler(function(e) {
-    var first = el.nameFirstInput.val();
-    var last = el.nameLastInput.val();
+        el.animationContainer
+          .show()
+          .empty()
+          .append(clone);
 
-    if (!validator.validFirstName(first)) {
-      el.nameFirstInvalid.show();
-      el.nameLastInvalid.hide();
-    } else if (!validator.validLastName(last)) {
-      el.nameFirstInvalid.hide();
-      el.nameLastInvalid.show();
-    } else {
-      data.admin_first_name = first;
-      data.admin_last_name = last;
-      hideAndShow(el.nameSlide, el.passwordSlide);
-    }
-  });
+        move(clone[0])
+          .set('display', 'block')
+          .set('opacity', 0.1)
+          .x(300)
+          .duration(0)
+          .end(function() {
+            move(clone[0])
+              .set('opacity', 1)
+              .x(0)
+              .end(function() {
+                _.defer(function() {
+                  slide.show();
+                  el.animationContainer.empty().hide();
+                  _.defer(clbk);
+                });
+              });
+          });
+      }
+    };
 
-  var passwordHandler = submitHandler(function(e) {
-    var allMessages = [
-      el.passwordMissing,
-      el.passwordConfirmationMissing,
-      el.passwordTooShort,
-      el.passwordConfirmationMismatch
-    ];
+    var focusFormInSlide = function(elSlide) {
+      elSlide.find('form :input:first') // select first input
+        .focus()                        // and focus it
+        .trigger('chosen:activate');    // trigger event to activate chosen selects
+    };
 
-    var showMessage = function(activeMessage) {
-      allMessages.forEach(function(message) {
-        if (message === activeMessage) {
-          message.show();
-        } else {
-          message.hide();
-        }
+    var showAndFocus = function(elShow, clbk) {
+      clbk = clbk || function() {};
+      show(elShow, function() {
+        focusFormInSlide(elShow);
+        clbk();
       });
     };
 
-    var password = el.passwordInput.val();
-    var confirmation = el.passwordConfirmationInput.val();
+    var hideAndShow = function(elHide, elShow, clbk) {
+      clbk = clbk || function() {};
+      hide(elHide, function() {
+        showAndFocus(elShow, clbk);
+      });
+    };
 
-    if (!password) {
-      showMessage(el.passwordMissing);
-    } else if (!validator.validPassword(password)) {
-      showMessage(el.passwordTooShort);
-    } else if (!confirmation) {
-      showMessage(el.passwordConfirmationMissing);
-    } else if (password !== confirmation) {
-      showMessage(el.passwordConfirmationMismatch);
-    } else {
-      data.admin_password = password;
-      hideAndShow(el.passwordSlide, el.marketplaceSlide);
-    }
-  });
+    var checkEmailAvailability = function(email, success, fail) {
+      var request = $.ajax(
+        {
+          type: "GET"
+          , url: 'http://catch.sharetri.be/int_api/check_email_availability'
+          , data: {email: email}
+          , dataType: 'json'
+        });
 
-  var marketplaceHandler = submitHandler(function(e) {
-    var type = el.marketplaceTypeSelect.val();
-    var name = el.marketplaceNameInput.val();
+      request.done(function(response) {
+        success(response.available);
+      });
+      request.fail(fail);
+    };
 
-    if (!validator.validMarketplaceType(type)) {
-      el.marketplaceTypeInvalid.show();
-      el.marketplaceNameTooShort.hide();
-    } else if (!validator.validMarketplaceName(name)) {
-      el.marketplaceTypeInvalid.hide();
-      el.marketplaceNameTooShort.show();
-    } else {
-      data.marketplace_type = type;
-      data.marketplace_name = name;
-      hideAndShow(el.marketplaceSlide, el.createdSlide, function() {
-        createMarketplace(data, function(marketplaceUrl) {
+    var emailHandler = submitHandler(function(e) {
+      // Keep animation and email check state in memory
+      debugger;
+      var animationDone = false;
+      var checkDone = false;
+      var emailAvailable;
+      var email = el.emailInput.val();
+
+      // Handle animation OR check ready.
+      // This is a stupid piece of code that should be handled without mutable variables
+      // by some library e.g. Bacon
+      var animationOrCheckDone = function() {
+        if(animationDone && checkDone) {
+          if (emailAvailable) {
+            data.admin_email = email;
+            showAndFocus(el.localizationSlide);
+          } else {
+            show(el.existingAccountSlide);
+          }
+        }
+      };
+
+      if (validator.validEmail(email)){
+        hide(el.emailSlide, function() {
+          animationDone = true;
+          animationOrCheckDone();
+        });
+        checkEmailAvailability(email, function(available) {
+          checkDone = true;
+          emailAvailable = available;
+          animationOrCheckDone();
+        }, function() {
+          show(el.emailCheckFailedSlide);
+        });
+      } else {
+        el.emailNotSell.hide();
+        el.emailInvalid.show();
+      }
+    });
+
+    var localizationHandler = submitHandler(function(e) {
+      var country = el.localizationCountrySelect.val();
+      var language = el.localizationLanguageSelect.val();
+
+      if (!validator.validCountry(country)) {
+        el.localizationDidntFindLanguage.hide();
+        el.localizationLanguageInvalid.hide();
+        el.localizationCountryInvalid.show();
+      } else if (!validator.validLanguage(language)) {
+        el.localizationDidntFindLanguage.hide();
+        el.localizationCountryInvalid.hide();
+        el.localizationLanguageInvalid.show();
+      } else {
+        data.marketplace_country = country;
+        data.marketplace_language = language;
+        hideAndShow(el.localizationSlide, el.nameSlide);
+      }
+    });
+
+    var nameHandler = submitHandler(function(e) {
+      var first = el.nameFirstInput.val();
+      var last = el.nameLastInput.val();
+
+      if (!validator.validFirstName(first)) {
+        el.nameFirstInvalid.show();
+        el.nameLastInvalid.hide();
+      } else if (!validator.validLastName(last)) {
+        el.nameFirstInvalid.hide();
+        el.nameLastInvalid.show();
+      } else {
+        data.admin_first_name = first;
+        data.admin_last_name = last;
+        hideAndShow(el.nameSlide, el.passwordSlide);
+      }
+    });
+
+    var passwordHandler = submitHandler(function(e) {
+      var allMessages = [
+        el.passwordMissing,
+        el.passwordConfirmationMissing,
+        el.passwordTooShort,
+        el.passwordConfirmationMismatch
+      ];
+
+      var showMessage = function(activeMessage) {
+        allMessages.forEach(function(message) {
+          if (message === activeMessage) {
+            message.show();
+          } else {
+            message.hide();
+          }
+        });
+      };
+
+      var password = el.passwordInput.val();
+      var confirmation = el.passwordConfirmationInput.val();
+
+      if (!password) {
+        showMessage(el.passwordMissing);
+      } else if (!validator.validPassword(password)) {
+        showMessage(el.passwordTooShort);
+      } else if (!confirmation) {
+        showMessage(el.passwordConfirmationMissing);
+      } else if (password !== confirmation) {
+        showMessage(el.passwordConfirmationMismatch);
+      } else {
+        data.admin_password = password;
+        hideAndShow(el.passwordSlide, el.marketplaceSlide);
+      }
+    });
+
+    var marketplaceHandler = submitHandler(function(e) {
+      var type = el.marketplaceTypeSelect.val();
+      var name = el.marketplaceNameInput.val();
+
+      if (!validator.validMarketplaceType(type)) {
+        el.marketplaceTypeInvalid.show();
+        el.marketplaceNameTooShort.hide();
+      } else if (!validator.validMarketplaceName(name)) {
+        el.marketplaceTypeInvalid.hide();
+        el.marketplaceNameTooShort.show();
+      } else {
+        data.marketplace_type = type;
+        data.marketplace_name = name;
+        hideAndShow(el.marketplaceSlide, el.createdSlide, function() {
+          createMarketplace(data, function(marketplaceUrl) {
             el.gotoButton.attr('href', marketplaceUrl);
             hideAndShow(el.createdSlide, el.createSuccessSlide);
           }, function() {
             hideAndShow(el.createdSlide, el.createFailedSlide);
           });
+        });
+      }
+    });
+
+    var createMarketplace = function(data, success, error) {
+      var request = $.ajax({
+        type: "POST",
+        url: 'http://catch.sharetri.be/int_api/create_trial_marketplace',
+        data: data,
+        dataType: 'json'
       });
-    }
-  });
 
-  var createMarketplace = function(data, success, error) {
-    var request = $.ajax({
-      type: "POST",
-      url: 'http://catch.sharetri.be/int_api/create_trial_marketplace',
-      data: data,
-      dataType: 'json'
-    });
+      request.done(function(response) {
+        success(response.marketplace_url);
+      });
 
-    request.done(function(response) {
-      success(response.marketplace_url);
-    });
+      request.fail(error);
+    };
 
-    request.fail(error);
+    return {init: init};
   };
 
   return {
-    init: init
+    init: function(root) {
+      create().init(root);
+    }
   };
 });
