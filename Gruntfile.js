@@ -313,6 +313,9 @@ module.exports = function(grunt) {
     },
     bake: {
       dev: {
+        options: {
+          basePath: "src/html/"
+        },
         files: {
           "dev-tmp/404.html": "src/html/404.html",
           "dev-tmp/about.html": "src/html/about.html",
@@ -330,6 +333,9 @@ module.exports = function(grunt) {
         }
       },
       dist: {
+        options: {
+          basePath: ".build-tmp/html/"
+        },
         files: {
           ".build-tmp/404.html": ".build-tmp/html/404.html",
           ".build-tmp/about.html": ".build-tmp/html/about.html",
