@@ -39,6 +39,8 @@ define([
         emailNotSell: root.find('#trial-email-not-sell'),
         emailInvalid: root.find('#trial-email-invalid'),
 
+        emailAvailabilitySlide: root.find('#trial-email-availability-slide'),
+
         emailCheckFailedSlide: root.find('#trial-email-check-failed'),
 
         existingAccountSlide: root.find('#trial-existing-account'),
@@ -224,6 +226,7 @@ define([
       // Keep animation and email check state in memory
       var animationDone = false;
       var checkDone = false;
+      var checkFailed = false;
       var emailAvailable;
       var email = el.emailInput.val();
 
@@ -231,22 +234,26 @@ define([
       // This is a stupid piece of code that should be handled without mutable variables
       // by some library e.g. Bacon
       var animationOrCheckDone = function() {
-        if(animationDone && checkDone) {
-          if (emailAvailable) {
-            data.admin_email = email;
-            showAndFocus(el.localizationSlide);
-			ga('send','pageview','trial-localization');
-    
-          } else {
-            show(el.existingAccountSlide);
-			ga('send','pageview','trial-email-err-already-exists');
-     
+        if(animationDone) {
+          if (checkDone) {
+            if (emailAvailable) {
+              data.admin_email = email;
+              hideAndShow(el.emailAvailabilitySlide, el.localizationSlide);
+              ga('send','pageview','trial-localization');
+            } else {
+              hideAndShow(el.emailAvailabilitySlide, el.existingAccountSlide);
+              ga('send','pageview','trial-email-err-already-exists');
+            }
+          }
+
+          if (checkFailed) {
+            hideAndShow(el.emailAvailabilitySlide, el.emailCheckFailedSlide);
           }
         }
       };
 
       if (validator.validEmail(email)){
-        hide(el.emailSlide, function() {
+        hideAndShow(el.emailSlide, el.emailAvailabilitySlide, function() {
           animationDone = true;
           animationOrCheckDone();
         });
@@ -255,12 +262,13 @@ define([
           emailAvailable = available;
           animationOrCheckDone();
         }, function() {
-          show(el.emailCheckFailedSlide);
+          checkFailed = true;
+          animationOrCheckDone();
         });
       } else {
         el.emailNotSell.hide();
         el.emailInvalid.show();
-		ga('send','pageview','trial-email-err-invalid-email'); 
+		ga('send','pageview','trial-email-err-invalid-email');
      }
     });
 
