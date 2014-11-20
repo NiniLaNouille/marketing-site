@@ -57,18 +57,49 @@ define(
 
     var initializeLightboxes = function() {
       initializeVideoLightbox("#sharetribe-video", {
+		afterLoad:function () {
+			console.log('Video loaded');
+			//GA event on play button
+			ga('send','event', 'video','play',  {'noninteraction': 1});
+		},
         afterClose: function() {
-          console.log('Video closed');
+			console.log('Video closed');
+			//GA event on closing
+			ga('send','event', 'video','close',  {'noninteraction': 1});
         }
       });
       initializeTrialLightbox("#home-get-started", {
         afterClose: function() {
           console.log('Home get started lightbox closed');
+			//GA event on closing
+			//TO ADD : name of step when it's closed
+			ga('send','event', 'trial','close',  {'noninteraction': 1});
         }
       });
-      initializeTrialLightbox("#menu-get-started");
-      initializeTrialLightbox("#mobilemenu-get-started");
-      initializeTrialLightbox(".pricing-get-started");
+      initializeTrialLightbox("#menu-get-started", {
+        afterClose: function() {
+          console.log('Home get started lightbox closed');
+			//GA event on closing
+			//TO ADD : name of step when it's closed
+			ga('send','event', 'trial','close',  {'noninteraction': 1});
+        }
+      });
+      initializeTrialLightbox("#mobilemenu-get-started", {
+        afterClose: function() {
+          console.log('Home get started lightbox closed');
+			//GA event on closing
+			//TO ADD : name of step when it's closed
+			ga('send','event', 'trial','close',  {'noninteraction': 1});
+        }
+      });
+      initializeTrialLightbox(".pricing-get-started", {
+        afterClose: function() {
+          console.log('Home get started lightbox closed');
+			//GA event on closing
+			//TO ADD : name of step when it's closed
+			ga('send','event', 'trial','close',  {'noninteraction': 1});
+        }
+      });
     };
 
     var app = {
